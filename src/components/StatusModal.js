@@ -17,9 +17,7 @@ export default function StatusModal({ show, handleClose, status }) {
 						<strong>Action successed for the following books:</strong>
 						{status.booksSuccessed.map((info, i) => (
 							<Form.Group key={i} className="d-flex gap-3 mx-4 align-items-center">
-								<Form.Text>
-									{info.book.title} - {info.book.author}
-								</Form.Text>
+								<Form.Text>{info.book.label}</Form.Text>
 								<Form.Text>
 									<strong>{info.message}</strong>
 								</Form.Text>
@@ -32,9 +30,7 @@ export default function StatusModal({ show, handleClose, status }) {
 						<strong>Action failed for the following books:</strong>
 						{status.booksFailed.map((info, i) => (
 							<Form.Group key={i} className="d-flex gap-3 mx-4 align-items-center">
-								<Form.Text>
-									{info.book.title} - {info.book.author}
-								</Form.Text>
+								<Form.Text>{info.book.label}</Form.Text>
 								<Form.Text>
 									<strong>{info.message}</strong>
 								</Form.Text>

@@ -8,14 +8,26 @@ import SearchBar from "./SearchBar";
 import AddEditBookModal from "./AddEditBookModal";
 import AddEditMemberModal from "./AddEditMemberModal";
 import { getBookById, getAllBooks } from "../mockup/books-api";
-import { getTotalBooksRented, rentBooks } from "../mockup/members-api";
+import { getAllMembers, getTotalBooksRented, rentBooks, returnBooks } from "../mockup/members-api";
 import StatusModal from "./StatusModal";
+import MemberList from "./MemberList";
 
 const TOAST_OPTIONS = { position: "bottom-right", autoClose: 3000, pauseOnHover: true };
 
-function App() {
-	const [books, setBooks] = useState(getAllBooks().map(book => ({ ...book, rentedBooks: getTotalBooksRented(book), show: true, selected: false })));
-	// const [members, setMembers] = useState(getMembers());
+function getMappedBooksFromApi() {
+	return getAllBooks().map(book => ({ ...book, rentedBooks: getTotalBooksRented(book), show: true, selected: false }));
+}
+
+function getMappedMembersFromApi() {
+	return getAllMembers().map(member => {
+		const rentedBooks = member.rentedBooks.map(id => ({ ...getBookById(id), selected: false }));
+		return { ...member, rentedBooks, show: true };
+	});
+}
+
+export default function App() {
+	const [books, setBooks] = useState(getMappedBooksFromApi());
+	const [members, setMembers] = useState(getMappedMembersFromApi());
 	const [showBookModal, setShowBookModal] = useState(false);
 	const [showMemberModal, setShowMemberModal] = useState(false);
 	const [bookForEdit, setBookForEdit] = useState(undefined);
@@ -30,7 +42,8 @@ function App() {
 		if (s && s.success !== undefined) {
 			if (s.success) {
 				toast.success(s.message + " (click for more details)", { ...TOAST_OPTIONS, onClick: () => setShowStatusModal(true) });
-				setBooks(getAllBooks().map(book => ({ ...book, rentedBooks: getTotalBooksRented(book), show: true, selected: false })));
+				setMembers(getMappedMembersFromApi());
+				setBooks(getMappedBooksFromApi());
 			} else toast.warn(s.message + " (click for more details)", { ...TOAST_OPTIONS, onClick: () => setShowStatusModal(true) });
 		}
 	};
@@ -42,7 +55,7 @@ function App() {
 		if (s && s.success !== undefined) {
 			if (s.success) {
 				toast.success(s.message + " (click for more details)", { ...TOAST_OPTIONS, onClick: () => setShowStatusModal(true) });
-				// if(status.type === "ADD" || status.type === "REMOVE") setMembers(getMembers());
+				setMembers(getMappedMembersFromApi());
 			} else toast.warn(s.message + " (click for more details)", { ...TOAST_OPTIONS, onClick: () => setShowStatusModal(true) });
 		}
 	};
@@ -56,32 +69,65 @@ function App() {
 		setShowMemberModal(true);
 	};
 
-	const handleOnBookEditClick = id => {
-		setBookForEdit(getBookById(id));
+	const handleOnBookEditClick = book => {
+		setBookForEdit(book);
 		setShowBookModal(true);
 	};
 
-	const handleOnMemberEditClick = id => {
-		console.log(id);
-		// setMemberForEdit(getMemberById(id));
-		// setShowMemberModal(true);
+	const handleOnMemberEditClick = member => {
+		setMemberForEdit(member);
+		setShowMemberModal(true);
 	};
 
 	function handleBookSearch(searchValue) {
 		setBooks(
 			books.map(book => {
-				if (book.author.toLowerCase().includes(searchValue) || book.title.toLowerCase().includes(searchValue)) book.show = true;
+				if (book.label.toLowerCase().includes(searchValue)) book.show = true;
 				else book.show = false;
 				return book;
 			})
 		);
 	}
 
+	function handleMemberSearch(searchValue) {
+		setMembers(
+			members.map(member => {
+				if (
+					member.label.toLowerCase().includes(searchValue) ||
+					member.rentedBooks.some(book => book.label.toLowerCase().includes(searchValue))
+				) {
+					member.show = true;
+				} else member.show = false;
+				return member;
+			})
+		);
+	}
+
 	function handleBookSelectClick(id) {
 		setBooks(prev => {
-			const copy = [...prev];
-			copy.find(book => book.id === id).selected = !copy.find(book => book.id === id).selected;
-			return [...copy];
+			prev.find(book => book.id === id).selected = !prev.find(book => book.id === id).selected;
+			return [...prev];
+		});
+	}
+	function deselectAllBooks() {
+		setBooks(prev => {
+			prev.forEach(book => (book.selected = false));
+			return [...prev];
+		});
+	}
+
+	function handleOnRentedBookSelectClick(memberId, bookId) {
+		setMembers(prev => {
+			const book = prev.find(member => member.id === memberId).rentedBooks.find(book => book.id === bookId);
+			book.selected = !book.selected;
+			return [...prev];
+		});
+	}
+
+	function deselectAllRentedBooks() {
+		setMembers(prev => {
+			prev.forEach(member => member.rentedBooks.forEach(book => (book.selected = false)));
+			return [...prev];
 		});
 	}
 
@@ -93,7 +139,24 @@ function App() {
 		setStatus(s);
 		if (s.success) toast.success(s.message + " (click for more details)", { ...TOAST_OPTIONS, onClick: () => setShowStatusModal(true) });
 		else toast.warn(s.message + " (click for more details)", { ...TOAST_OPTIONS, onClick: () => setShowStatusModal(true) });
-		setBooks(getAllBooks().map(book => ({ ...book, rentedBooks: getTotalBooksRented(book), show: true, selected: false })));
+		setBooks(getMappedBooksFromApi());
+		setMembers(getMappedMembersFromApi());
+	}
+
+	function handleReturnBooksConfirm() {
+		const memberIdsWithSelectedBooks = members.reduce((arr, member) => {
+			const selectedBooks = member.rentedBooks.filter(book => book.selected);
+			if (selectedBooks.length > 0) arr.push({ memberId: member.id, selectedBooks });
+			return arr;
+		}, []);
+		memberIdsWithSelectedBooks.forEach(item => {
+			const s = returnBooks(item.memberId, item.selectedBooks);
+			if (s.success) {
+				toast.success(s.message, TOAST_OPTIONS);
+			} else toast.error(s.message, TOAST_OPTIONS);
+		});
+		setBooks(getMappedBooksFromApi());
+		setMembers(getMappedMembersFromApi());
 	}
 
 	function handleCloseStatusModal() {
@@ -125,20 +188,23 @@ function App() {
 						onBookEditClick={handleOnBookEditClick}
 						onBookSelectClick={handleBookSelectClick}
 						onRentConfirmed={handleRentConfirm}
+						deselectAllBooks={deselectAllBooks}
 					/>
 				</Tab>
-				<Tab eventKey="rented-books" title="Rented Books">
-					<SearchBar title="Search" />
-				</Tab>
 				<Tab eventKey="members" title="Members">
-					<SearchBar title="Find Member" />
+					<SearchBar title="Search" handleSearch={handleMemberSearch} />
+					<MemberList
+						members={members.filter(m => m.show)}
+						onMemberEditClick={handleOnMemberEditClick}
+						onRentedBookSelectClick={handleOnRentedBookSelectClick}
+						deselectAllRentedBooks={deselectAllRentedBooks}
+						onReturnBooksConfirm={handleReturnBooksConfirm}
+					/>
 				</Tab>
 			</Tabs>
 			<AddEditBookModal show={showBookModal} handleClose={status => handleCloseBookModal(status)} book={bookForEdit} />
-			<AddEditMemberModal show={showMemberModal} handleClose={status => handleCloseMemberModal(status)} />
+			<AddEditMemberModal show={showMemberModal} handleClose={status => handleCloseMemberModal(status)} member={memberForEdit} />
 			<StatusModal show={showStatusModal} handleClose={handleCloseStatusModal} status={status} />
 		</Container>
 	);
 }
-
-export default App;

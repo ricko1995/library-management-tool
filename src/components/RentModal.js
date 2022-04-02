@@ -44,7 +44,7 @@ export default function RentModal({ show, handleClose, handleRentConfirm, books 
 					<Form.Group className="d-flex flex-column mx-5 mb-3">
 						{books.map((book, i) => (
 							<Form.Text key={book.id} className="d-flex align-items-center gap-2">
-								{i + 1}. {book.title} - {book.author}
+								{i + 1}. {book.label}
 							</Form.Text>
 						))}
 					</Form.Group>
