@@ -43,7 +43,7 @@ export default function AddEditMember({ show, handleClose, member }) {
 					</Form.Group>
 					<Form.Group className="mb-3">
 						<Form.Label>Member Surname</Form.Label>
-						<Form.Control ref={memberSurnameRef} type="text" placeholder="Enter Author" required />
+						<Form.Control ref={memberSurnameRef} type="text" placeholder="Enter Surname" required />
 					</Form.Group>
 					<Form.Group className="mb-3">
 						<Form.Label>Birthdate</Form.Label>

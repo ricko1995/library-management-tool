@@ -1,70 +1,53 @@
-# Getting Started with Create React App
+# Introduction
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[Library Management Tool](https://ricko.us.to/andrija/LMT) is a simple React app created with the purpose of a job interview at Microblink. The app consists of a simple UI for managing books and members of the library, renting, and returning books in the library.
 
-## Available Scripts
+# Functionality
 
-In the project directory, you can run:
+## Adding new and editing existing books in the library:
 
-### `npm start`
+### Adding:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Clicking on the button New Book button opens the Modal with fields required for creating a new book. Entering the required data and clicking the button Add, a new book will be created.
+![Add Book gif](https://github.com/ricko1995/library-management-tool/blob/master/public/screenshots/AddBook.gif?raw=true)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Editing:
 
-### `npm test`
+Clicking on the Edit button on the book card opens the same Modal filed with book info. After editing and clicking the Update button, modifications will be saved.
+![Modify Book gif](https://github.com/ricko1995/library-management-tool/blob/master/public/screenshots/ModifyBook.gif?raw=true)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Adding new and editing existing members in the library:
 
-### `npm run build`
+### Adding:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Clicking on the button New Member button opens the Modal with fields required for creating a new library member. Entering the required data and clicking the button Add, a new member will be added to the library.
+![Add Member gif](https://github.com/ricko1995/library-management-tool/blob/master/public/screenshots/AddMember.gif?raw=true)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Editing:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Clicking on the Edit button on the member item opens the same Modal filed with member info. After editing and clicking the Update button, modifications will be saved.
+![Modify Member gif](https://github.com/ricko1995/library-management-tool/blob/master/public/screenshots/ModifyMember.gif?raw=true)
 
-### `npm run eject`
+## Searching books and members:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Searching books:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Typing in the search field in the All books tab will filter all books that include search value in their title or author name.
+![Find Book gif](https://github.com/ricko1995/library-management-tool/blob/master/public/screenshots/FindBook.gif?raw=true)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Searching members:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Typing in the search field in the Members tab will filter all members that include search value in their name, surname or book title, and author name.
+![Find Member gif](https://github.com/ricko1995/library-management-tool/blob/master/public/screenshots/FindMember.gif?raw=true)
 
-## Learn More
+## Renting and returning books in the library:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Renting books:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+After selecting one or more books the popup will appear that has a button for renting selected books. Clicking the Rent button opens the Modal with input that has a list of all the library members. After selecting the member and clicking Rent, selected books will be rented to that member.
+![Rent Books gif](https://github.com/ricko1995/library-management-tool/blob/master/public/screenshots/RentBooks.gif?raw=true)
 
-### Code Splitting
+### Returning books:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+In the Members tabs clicking on the Show Rented Books button will expand that item and show all the books rented by that member. After selecting one or more books the popup will appear that has a button for returning selected books. Clicking the Return button opens the Modal to confirm the book's return.
+![Return Books gif](https://github.com/ricko1995/library-management-tool/blob/master/public/screenshots/ReturnBooks.gif?raw=true)

@@ -45,6 +45,7 @@ export function modifyBook(bookForModify) {
 		modifying.author = bookForModify.author;
 		modifying.title = bookForModify.title;
 		modifying.totalBooks = bookForModify.totalBooks;
+		modifying.label = `${bookForModify.title} - ${bookForModify.author}`;
 		status.message = "Book successfully modified";
 		status.booksSuccessed.push({ book: modifying, message: "Book successfully modified" });
 		return status;
