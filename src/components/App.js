@@ -105,7 +105,8 @@ export default function App() {
 
 	function handleBookSelectClick(id) {
 		setBooks(prev => {
-			prev.find(book => book.id === id).selected = !prev.find(book => book.id === id).selected;
+			const book = prev.find(book => book.id === id);
+			book.selected = !book.selected;
 			return [...prev];
 		});
 	}
@@ -159,10 +160,6 @@ export default function App() {
 		setMembers(getMappedMembersFromApi());
 	}
 
-	function handleCloseStatusModal() {
-		setShowStatusModal(false);
-	}
-
 	return (
 		<Container className="d-flex flex-column mb-5">
 			<div className="d-flex align-items-center">
@@ -179,7 +176,6 @@ export default function App() {
 					</Button>
 				</div>
 			</div>
-			<ToastContainer />
 			<Tabs defaultActiveKey="books" className="">
 				<Tab className="" eventKey="books" title="All Books">
 					<SearchBar title="Find Book" handleSearch={handleBookSearch} />
@@ -204,7 +200,8 @@ export default function App() {
 			</Tabs>
 			<AddEditBookModal show={showBookModal} handleClose={status => handleCloseBookModal(status)} book={bookForEdit} />
 			<AddEditMemberModal show={showMemberModal} handleClose={status => handleCloseMemberModal(status)} member={memberForEdit} />
-			<StatusModal show={showStatusModal} handleClose={handleCloseStatusModal} status={status} />
+			<StatusModal show={showStatusModal} handleClose={() => setShowStatusModal(false)} status={status} />
+			<ToastContainer />
 		</Container>
 	);
 }

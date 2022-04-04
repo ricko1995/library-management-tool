@@ -3,9 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Form, InputGroup } from "react-bootstrap";
 
+let debounceTimeout;
+
 export default function SearchBar({ title, handleSearch }) {
 	function onInputChange(e) {
-		handleSearch(e.target.value.toLowerCase());
+		if (debounceTimeout) clearTimeout(debounceTimeout);
+		debounceTimeout = setTimeout(() => {
+			handleSearch(e.target.value.toLowerCase());
+		}, 250);
 	}
 
 	return (

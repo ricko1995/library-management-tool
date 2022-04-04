@@ -19,7 +19,11 @@ export default function AddEditBookModal({ show, handleClose, book }) {
 		if (!bookAuthorRef.current.checkValidity()) return bookAuthorRef.current.reportValidity();
 		if (!bookNumberRef.current.checkValidity()) return bookNumberRef.current.reportValidity();
 
-		const newBook = { title: bookTitleRef.current.value, author: bookAuthorRef.current.value, totalBooks: parseInt(bookNumberRef.current.value) };
+		const newBook = {
+			title: bookTitleRef.current.value,
+			author: bookAuthorRef.current.value,
+			totalBooks: parseInt(bookNumberRef.current.value),
+		};
 		let status;
 		if (book) status = modifyBook({ id: book.id, ...newBook });
 		else status = addBook(newBook);
